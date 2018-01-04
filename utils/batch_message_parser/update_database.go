@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"encoding/csv"
 	"fmt"
-	"github.com/mattn/go-sqlite3"
+	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
 )
@@ -29,11 +29,14 @@ func main() {
 		log.Fatalln("Error parsing records")
 	}
 
+	stmt, err := db.Prepare("INSERT INTO Dummy (userid, text, username) VALUES (?, ?, ?)")
+	defer stmt.Close()
+	if err != nil {
+		log.Fatalln("Couldn't prepare statement")
+	}
 	for _, r := range recs {
-		id, text, name := r[0], r[1], r[2]
-		stmt := fmt.Sprintf("INSERT INTO Messages (userid, text, username) VALUES (%s, %s, %s)", id, text, name)
 		log.Println(stmt)
-		_, err := db.Exec(stmt)
+		_, err := db.Exec(stmt, r[0], r[1], r[2])
 		if err != nil {
 			log.Fatalln("Couldn't insert message to db")
 		}
