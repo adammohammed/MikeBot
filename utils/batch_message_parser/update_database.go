@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"encoding/csv"
-	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
@@ -36,7 +35,7 @@ func main() {
 	}
 	for _, r := range recs {
 		log.Println(stmt)
-		_, err := db.Exec(stmt, r[0], r[1], r[2])
+		_, err := stmt.Exec(stmt, r[0], r[1], r[2])
 		if err != nil {
 			log.Fatalln("Couldn't insert message to db")
 		}
