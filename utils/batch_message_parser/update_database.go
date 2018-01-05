@@ -45,6 +45,10 @@ func main() {
 			log.Fatalln("Couldn't insert message to db")
 		}
 	}
+	err := os.Remove("../../messages.csv")
+	if err != nil {
+		Log.Fatalln("Couldn't remove messages.csv")
+	}
 	/*
 		str, err := ioutil.ReadAll(f)
 		if err != nil {
