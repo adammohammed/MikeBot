@@ -41,16 +41,6 @@ func main() {
 
 	err = os.Remove(msgFile)
 	errorFatal(err, "Couldn't remove the message file")
-	/*
-		str, err := ioutil.ReadAll(f)
-		if err != nil {
-			log.Fatalln("Error Reading from file")
-		}
-
-		contents := string(str)
-
-		log.Println(contents)
-	*/
 }
 
 func errorFatal(err error, msg string) {
