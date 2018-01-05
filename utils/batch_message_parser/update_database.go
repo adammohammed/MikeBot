@@ -10,13 +10,15 @@ import (
 )
 
 func main() {
-	f, err := os.Open("../../messages.csv")
+	msgFile := "~/go/src/github.com/adammohammed/MikeBot/messages.csv"
+	dbFile := "~/go/src/github.com/adammohammed/MikeBot/messages.db"
+	f, err := os.Open(msgFile)
 	if err != nil {
 		log.Fatalln("Error opening file")
 	}
 	defer f.Close()
 
-	db, err := sql.Open("sqlite3", "../../messages.db")
+	db, err := sql.Open("sqlite3", dbFile)
 	if err != nil {
 		log.Fatalln("Couldn't open database")
 	}
@@ -45,9 +47,9 @@ func main() {
 			log.Fatalln("Couldn't insert message to db")
 		}
 	}
-	err := os.Remove("../../messages.csv")
-	if err != nil {
-		Log.Fatalln("Couldn't remove messages.csv")
+	er := os.Remove(msgFile)
+	if er != nil {
+		log.Fatalln("Couldn't remove messages.csv")
 	}
 	/*
 		str, err := ioutil.ReadAll(f)
