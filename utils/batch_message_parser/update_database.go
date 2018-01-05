@@ -10,32 +10,23 @@ import (
 )
 
 func main() {
-	msgFile := "~/go/src/github.com/adammohammed/MikeBot/messages.csv"
-	dbFile := "~/go/src/github.com/adammohammed/MikeBot/messages.db"
+	msgFile := "/home/adam/go/src/github.com/adammohammed/MikeBot/messages.csv"
+	dbFile := "/home/adam/go/src/github.com/adammohammed/MikeBot/messages.db"
 	f, err := os.Open(msgFile)
-	if err != nil {
-		log.Fatalln("Error opening file")
-	}
+	errorFatal(err, "Couldn't open message file")
 	defer f.Close()
 
 	db, err := sql.Open("sqlite3", dbFile)
-	if err != nil {
-		log.Fatalln("Couldn't open database")
-	}
+	errorFatal(err, "Couldn't open database")
 	defer db.Close()
 
 	reader := csv.NewReader(f)
 	recs, err := reader.ReadAll()
-
-	if err != nil {
-		log.Fatalln("Error parsing records")
-	}
+	errorFatal(err, "Error reading csv file")
 
 	stmt, err := db.Prepare("INSERT INTO Messages (userid, text, username) VALUES (?, ?, ?)")
 	defer stmt.Close()
-	if err != nil {
-		log.Fatalln("Couldn't prepare statement")
-	}
+	errorFatal(err, "Couldn't prepare statement")
 	for _, r := range recs {
 		userid := string(r[0])
 		text := string(r[1])
@@ -47,10 +38,9 @@ func main() {
 			log.Fatalln("Couldn't insert message to db")
 		}
 	}
-	er := os.Remove(msgFile)
-	if er != nil {
-		log.Fatalln("Couldn't remove messages.csv")
-	}
+
+	err = os.Remove(msgFile)
+	errorFatal(err, "Couldn't remove the message file")
 	/*
 		str, err := ioutil.ReadAll(f)
 		if err != nil {
@@ -61,4 +51,10 @@ func main() {
 
 		log.Println(contents)
 	*/
+}
+
+func errorFatal(err error, msg string) {
+	if err != nil {
+		log.Fatalln(msg)
+	}
 }
