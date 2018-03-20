@@ -5,7 +5,11 @@ import (
 	"log"
 	"net/http"
 
+	"database/sql"
 	"github.com/adammohammed/groupmebot"
+	_ "github.com/mattn/go-sqlite3"
+	"regexp"
+	"strings"
 )
 
 /*
@@ -22,6 +26,35 @@ func hello(msg groupmebot.InboundMessage) string {
 func hello2(msg groupmebot.InboundMessage) string {
 	resp := fmt.Sprintf("Hello, %v.", msg.Name)
 	return resp
+}
+
+func nameism(msg groupmebot.InboundMessage) string {
+	db, err := sql.Open("sqlite3", "messages.db")
+	if err != nil {
+		return ""
+	}
+	defer db.Close()
+
+	re := regexp.MustCompile("(?P<name>[a-zA-Z]+)ism")
+	match := re.FindStringSubmatch(msg.Text)
+	if len(match) > 0 {
+		name := strings.ToLower(match[1])
+		query := "SELECT Messages.text FROM Messages JOIN Users WHERE Messages.userid = Users.userid WHERE Users.name IS ? ORDER BY RANDOM() LIMIT 1;"
+		var randomMessage string
+		err = db.QueryRow(query, name).Scan(&randomMessage)
+		switch {
+		case err == sql.ErrNoRows:
+			return "Mike is a disgrace to pasta"
+		case err != nil:
+			return ""
+		default:
+			return randomMessage
+		}
+
+	}
+
+	return ""
+
 }
 
 func main() {
