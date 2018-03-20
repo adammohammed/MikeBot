@@ -67,6 +67,7 @@ func main() {
 	// Make a list of functions
 	bot.AddHook("Hi!$", hello)
 	bot.AddHook("Hello!$", hello2)
+	bot.AddHook("[a-zA-Z]+ism", nameism)
 
 	// Create Server to listen for incoming POST from GroupMe
 	log.Printf("Listening on %v...\n", bot.Server)
