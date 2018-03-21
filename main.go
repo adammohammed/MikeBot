@@ -48,7 +48,7 @@ func nameism(msg groupmebot.InboundMessage) string {
 		case err == sql.ErrNoRows:
 			return ""
 		case err != nil:
-			return "No Message"
+			return ""
 		default:
 			return randomMessage
 		}
