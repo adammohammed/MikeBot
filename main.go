@@ -37,6 +37,7 @@ func nameism(msg groupmebot.InboundMessage) string {
 	defer db.Close()
 	re := regexp.MustCompile("(?P<name>[a-zA-Z]+)ism")
 	match := re.FindStringSubmatch(msg.Text)
+
 	if len(match) > 0 {
 		name := strings.ToLower(match[1])
 		fmt.Printf("Looking for message from %s\n", name)
@@ -45,7 +46,7 @@ func nameism(msg groupmebot.InboundMessage) string {
 		err = db.QueryRow(query, name).Scan(&randomMessage)
 		switch {
 		case err == sql.ErrNoRows:
-			return "Mike is a disgrace to pasta"
+			return ""
 		case err != nil:
 			return "No Message"
 		default:
