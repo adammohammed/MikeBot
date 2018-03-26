@@ -35,7 +35,7 @@ func nameism(msg groupmebot.InboundMessage) string {
 		return ""
 	}
 	defer db.Close()
-	re := regexp.MustCompile("(?P<name>[a-zA-Z]+)ism")
+	re := regexp.MustCompile("(?P<name>[a-zA-Z]+)(i|I)(s|S)(m|M)")
 	match := re.FindStringSubmatch(msg.Text)
 
 	if len(match) > 0 {
@@ -69,7 +69,7 @@ func main() {
 	// Make a list of functions
 	bot.AddHook("Hi!$", hello)
 	bot.AddHook("Hello!$", hello2)
-	bot.AddHook("[a-zA-Z]+ism", nameism)
+	bot.AddHook("([a-zA-Z]+)(i|I)(s|S)(m|M)", nameism)
 
 	// Create Server to listen for incoming POST from GroupMe
 	log.Printf("Listening on %v...\n", bot.Server)
