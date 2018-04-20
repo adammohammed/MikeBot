@@ -61,7 +61,12 @@ func nameism(msg groupmebot.InboundMessage) string {
 
 func main() {
 
-	bot, err := groupmebot.NewBotFromJson("mybot_cfg.json")
+	csvLog := groupmebot.CSVLogger{"messages.csv"}
+	std := groupmebot.StdOutLogger{}
+	combinedLogger := groupmebot.CompositeLogger{Loggers: []groupmebot.Logger{csvLog, std}}
+
+	bot := groupmebot.GroupMeBot{Logger: combinedLogger}
+	err := bot.ConfigureFromJson("mybot_cfg.json")
 	if err != nil {
 		log.Fatal("Could not create bot structure")
 	}
